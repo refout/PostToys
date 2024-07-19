@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <PublishAot>false</PublishAot>
+        <InvariantGlobalization>true</InvariantGlobalization>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\PostToys.Parse.Markdown\PostToys.Parse.Markdown.csproj"/>
+        <ProjectReference Include="..\PostToys.Parse\PostToys.Parse.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Http\" />
+    </ItemGroup>
+
+</Project>

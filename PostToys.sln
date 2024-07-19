@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostToys", "PostToys\PostToys.csproj", "{19C0591F-A249-472C-946A-BAD76D4C399A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostToys.Parse.Markdown", "PostToys.Parse.Markdown\PostToys.Parse.Markdown.csproj", "{C15C72AF-C6E3-4B61-8F70-068BA56023D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostToys.Parse", "PostToys.Parse\PostToys.Parse.csproj", "{F53D4625-D782-45E4-BD12-93E472ECDA3E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{19C0591F-A249-472C-946A-BAD76D4C399A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19C0591F-A249-472C-946A-BAD76D4C399A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19C0591F-A249-472C-946A-BAD76D4C399A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19C0591F-A249-472C-946A-BAD76D4C399A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C15C72AF-C6E3-4B61-8F70-068BA56023D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C15C72AF-C6E3-4B61-8F70-068BA56023D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C15C72AF-C6E3-4B61-8F70-068BA56023D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C15C72AF-C6E3-4B61-8F70-068BA56023D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F53D4625-D782-45E4-BD12-93E472ECDA3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F53D4625-D782-45E4-BD12-93E472ECDA3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F53D4625-D782-45E4-BD12-93E472ECDA3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F53D4625-D782-45E4-BD12-93E472ECDA3E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
