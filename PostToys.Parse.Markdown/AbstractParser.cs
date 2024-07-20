@@ -1,12 +1,14 @@
 ﻿using System.Text;
+using PostToys.Parse.Markdown.Model;
+using PostToys.Parse.Markdown.Processor;
 using PostToys.Parse.Model;
 
-namespace PostToys.Parse;
+namespace PostToys.Parse.Markdown;
 
 /// <summary>
 /// 解析器抽象类
 /// </summary>
-public abstract class AbstractParser(string[] lines)
+public abstract class AbstractParser(string[] lines) : IParser
 {
     #region private field
 

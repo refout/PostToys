@@ -1,4 +1,4 @@
-namespace PostToys.Parse.Model;
+namespace PostToys.Parse.Markdown.Model;
 
 /// <summary>
 /// 文档节点

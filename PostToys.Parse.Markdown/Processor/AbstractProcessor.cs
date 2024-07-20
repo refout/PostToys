@@ -1,7 +1,8 @@
 ﻿using System.Text;
+using PostToys.Parse.Markdown.Model;
 using PostToys.Parse.Model;
 
-namespace PostToys.Parse;
+namespace PostToys.Parse.Markdown.Processor;
 
 /// <summary>
 /// 处理器抽象类

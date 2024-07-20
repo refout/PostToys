@@ -1,6 +1,4 @@
-﻿using PostToys.Parse.Model;
-
-namespace PostToys.Parse.Markdown.Model;
+﻿namespace PostToys.Parse.Markdown.Model;
 
 /// <summary>
 /// 标题

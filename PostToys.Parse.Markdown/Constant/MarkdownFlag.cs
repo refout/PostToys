@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Reflection;
 
-namespace PostToys.Parse.Markdown.ParseHandler;
+namespace PostToys.Parse.Markdown.Constant;
 
 /// <summary>
 /// markdown 文档节点的标识

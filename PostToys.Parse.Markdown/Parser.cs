@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
+using PostToys.Parse.Markdown.Constant;
 using PostToys.Parse.Markdown.Model;
-using PostToys.Parse.Markdown.ParseHandler;
+using PostToys.Parse.Markdown.Processor;
 using PostToys.Parse.Model;
 
 namespace PostToys.Parse.Markdown;
@@ -17,10 +18,10 @@ public class Parser : AbstractParser
     private Parser(string[] lines) : base(lines)
     {
         // 添加默认处理器
-        AddProcessor(MarkdownFlag.Header, new ParseHeader());
-        AddProcessor(MarkdownFlag.Blockquote, new ParseBlockquote());
-        AddProcessor(MarkdownFlag.CodeBlock, new ParseCodeBlock());
-        AddProcessor(MarkdownFlag.Paragraph, new ParseParagraph());
+        AddProcessor(MarkdownFlag.Header, new HeaderProcessor());
+        AddProcessor(MarkdownFlag.Blockquote, new BlockquoteProcessor());
+        AddProcessor(MarkdownFlag.CodeBlock, new CodeBlockProcessor());
+        AddProcessor(MarkdownFlag.Paragraph, new ParagraphProcessor());
     }
 
     /// <summary>

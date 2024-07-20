@@ -1,12 +1,13 @@
+using PostToys.Parse.Markdown.Constant;
 using PostToys.Parse.Markdown.Model;
 using PostToys.Parse.Model;
 
-namespace PostToys.Parse.Markdown.ParseHandler;
+namespace PostToys.Parse.Markdown.Processor;
 
 /// <summary>
 /// 标题处理器
 /// </summary>
-public class ParseHeader : AbstractProcessor
+public class HeaderProcessor : AbstractProcessor
 {
     /// <summary>
     /// 传入内容是否属于当前处理器所处理的内容
