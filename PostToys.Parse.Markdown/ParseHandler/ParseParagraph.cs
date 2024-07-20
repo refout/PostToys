@@ -24,9 +24,9 @@ public class ParseParagraph : AbstractProcessor
     /// <param name="nodes">放置节点的列表</param>
     /// <param name="lines">所有的文本行</param>
     /// <param name="currentLineIndex">当前所在行索引</param>
-    /// <param name="id">id累加标识</param>
+    /// <param name="id">生成节点的id</param>
     /// <returns>是否转换成功</returns>
-    public override bool TryToNode(List<Node> nodes, string[] lines, ref int currentLineIndex, ref int id)
+    public override bool TryToNode(List<Node> nodes, string[] lines, ref int currentLineIndex, int id)
     {
         var currentLine = lines[currentLineIndex];
         if (!Belong(currentLine)) return false;
@@ -35,7 +35,7 @@ public class ParseParagraph : AbstractProcessor
 
         Paragraph paragraph = new()
         {
-            Id = id++,
+            Id = id,
             Content = value,
             LinesIndex = linesIndex
         };

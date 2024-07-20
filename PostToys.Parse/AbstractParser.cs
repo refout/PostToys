@@ -11,6 +11,11 @@ public abstract class AbstractParser(string[] lines)
     #region private field
 
     /// <summary>
+    /// 节点id
+    /// </summary>
+    private int _id;
+
+    /// <summary>
     /// 输入的 markdown 行
     /// </summary>
     private readonly string[] _lines = lines;
@@ -62,6 +67,11 @@ public abstract class AbstractParser(string[] lines)
     #endregion
 
     #region protected method
+
+    /// <summary>
+    /// 获取节点下一个 id
+    /// </summary>
+    private int NextId => Interlocked.Increment(ref _id);
 
     /// <summary>
     /// <see cref="Node"/> 转为字典，key：<see cref="Node"/> id，value：<see cref="Node"/>
@@ -146,9 +156,6 @@ public abstract class AbstractParser(string[] lines)
     {
         if (_lines.Length == 0) return;
 
-        // 节点 id
-        var id = 1;
-
         for (var i = 0; i < _lines.Length; i++)
         {
             var line = _lines[i];
@@ -157,7 +164,7 @@ public abstract class AbstractParser(string[] lines)
             var flag = GetProcessorFlag(line.Trim());
             if (_processors.TryGetValue(flag, out var processor) && processor is not null)
             {
-                processor.TryToNode(_nodes, _lines, ref i, ref id);
+                processor.TryToNode(_nodes, _lines, ref i, NextId);
             }
         }
     }
