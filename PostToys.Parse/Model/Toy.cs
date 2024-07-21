@@ -28,7 +28,7 @@ public record struct Toy
     /// <summary>
     /// 请求头
     /// </summary>
-    public Dictionary<string, object> Header { get; init; }
+    public Dictionary<string, string> Header { get; init; }
 
     /// <summary>
     /// 请求参数

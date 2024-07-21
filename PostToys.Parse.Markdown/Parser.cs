@@ -126,7 +126,7 @@ public class Parser : AbstractParser
         var url = "";
         var method = "";
         var version = "";
-        var header = new Dictionary<string, object>();
+        var header = new Dictionary<string, string>();
         var param = new Dictionary<string, object>();
         var pathVar = Array.Empty<object>();
         var body = "";
@@ -168,7 +168,7 @@ public class Parser : AbstractParser
                 case CodeBlock code when content.Contains("header"):
                     header = code.Lang switch
                     {
-                        "json" => JsonSerializer.Deserialize<Dictionary<string, object>>(code.Content) ?? [],
+                        "json" => JsonSerializer.Deserialize<Dictionary<string, string>>(code.Content) ?? [],
                         _ => []
                     };
                     break;

@@ -14,8 +14,4 @@
         <ProjectReference Include="..\PostToys.Parse\PostToys.Parse.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Http\" />
-    </ItemGroup>
-
 </Project>
