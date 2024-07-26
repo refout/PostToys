@@ -1,6 +1,7 @@
 ﻿namespace PostToys.Parse.Model;
 
 /// <summary>
+/// 请求信息；
 /// POST 的一个载体
 /// </summary>
 public record struct Toy

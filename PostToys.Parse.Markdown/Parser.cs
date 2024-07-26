@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+﻿using PostToys.Common;
 using PostToys.Parse.Markdown.Constant;
 using PostToys.Parse.Markdown.Model;
 using PostToys.Parse.Markdown.Processor;
@@ -147,28 +147,28 @@ public class Parser : AbstractParser
                 case CodeBlock code when content.Contains("body"):
                     body = code.Lang switch
                     {
-                        "json" => code.Content,
+                        "json" => string.IsNullOrWhiteSpace(code.Content) ? default : code.Content,
                         _ => ""
                     };
                     break;
                 case CodeBlock code when content.Contains("param"):
                     param = code.Lang switch
                     {
-                        "json" => JsonSerializer.Deserialize<Dictionary<string, object>>(code.Content) ?? [],
+                        "json" => JsonUtil.Deserialize<Dictionary<string, object>>(code.Content) ?? [],
                         _ => []
                     };
                     break;
                 case CodeBlock code when content.Contains("pathVar"):
                     pathVar = code.Lang switch
                     {
-                        "json" => JsonSerializer.Deserialize<object[]>(code.Content) ?? [],
+                        "json" => JsonUtil.Deserialize<object[]>(code.Content) ?? [],
                         _ => []
                     };
                     break;
                 case CodeBlock code when content.Contains("header"):
                     header = code.Lang switch
                     {
-                        "json" => JsonSerializer.Deserialize<Dictionary<string, string>>(code.Content) ?? [],
+                        "json" => JsonUtil.Deserialize<Dictionary<string, string>>(code.Content) ?? [],
                         _ => []
                     };
                     break;
@@ -195,7 +195,7 @@ public class Parser : AbstractParser
             Header = header,
             Param = param,
             PathVar = pathVar,
-            Body = body
+            Body = body!
         };
     }
 

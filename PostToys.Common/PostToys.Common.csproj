@@ -4,12 +4,10 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <RootNamespace>PostToys.Parse.Markdown</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\PostToys.Common\PostToys.Common.csproj" />
-        <ProjectReference Include="..\PostToys.Parse\PostToys.Parse.csproj"/>
+      <ProjectReference Include="..\PostToys.Post\PostToys.Post.csproj" />
     </ItemGroup>
 
 </Project>

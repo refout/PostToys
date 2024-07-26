@@ -11,16 +11,13 @@
 
 ### 1.1 接口地址[url]
 
-> POST http://{ip}:{{port}}{{context-path}}{{baseUrl}}/create?name=li si&age=12 HTTP/1.1
+> GET https://examples.http-client.intellij.net/get HTTP/3.0
 
 ### 1.2 请求头[header]
 
 ```json
 {
-  "Accept-Encoding": "gzip, deflate, br",
-  "ss": "ssss",
-  "Host": "www.baidu.com",
-  "Connection": "keep-alive"
+  "Accept": "application/json"
 }
 ```
 
@@ -28,13 +25,7 @@
 
 ```json
 {
-  "updatedTime": "2022-11-23",
-  "sequence": 0,
-  "taxRate": "3",
-  "unit": "xx",
-  "createdTime": "2022-11-23",
-  "id": "6",
-  "amount": "26.59"
+  "show_env": 1
 }
 ```
 
@@ -42,19 +33,18 @@
 
 ```json
 {
-  "updatedTime": "2022-11-23",
-  "sequence": 0,
-  "taxRate": "3",
-  "unit": "xx",
-  "createdTime": "2022-11-23",
-  "id": "6",
-  "amount": "26.59"
+  "count": 1,
+  "desc": "test desc"
 }
 ```
+
 ### 1.5 路径参数[pathVar]
 
 ```json
-["aaa",1,3,"lisi"]
+[
+ 
+]
 ```
+
 ### 1.4 成功响应[success]
 

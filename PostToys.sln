@@ -6,6 +6,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostToys.Parse.Markdown", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostToys.Parse", "PostToys.Parse\PostToys.Parse.csproj", "{F53D4625-D782-45E4-BD12-93E472ECDA3E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostToys.Common", "PostToys.Common\PostToys.Common.csproj", "{87E97790-CB50-425C-8990-A1284940A010}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostToys.Post", "PostToys.Post\PostToys.Post.csproj", "{DCBB5044-3456-498A-9069-AA2E74E50713}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostToys.Post.Http", "PostToys.Post.Http\PostToys.Post.Http.csproj", "{C1C34BCB-1741-4028-B8EF-6DDCECE4C9B4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +30,17 @@ Global
 		{F53D4625-D782-45E4-BD12-93E472ECDA3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F53D4625-D782-45E4-BD12-93E472ECDA3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F53D4625-D782-45E4-BD12-93E472ECDA3E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87E97790-CB50-425C-8990-A1284940A010}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87E97790-CB50-425C-8990-A1284940A010}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87E97790-CB50-425C-8990-A1284940A010}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87E97790-CB50-425C-8990-A1284940A010}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCBB5044-3456-498A-9069-AA2E74E50713}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCBB5044-3456-498A-9069-AA2E74E50713}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCBB5044-3456-498A-9069-AA2E74E50713}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCBB5044-3456-498A-9069-AA2E74E50713}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1C34BCB-1741-4028-B8EF-6DDCECE4C9B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1C34BCB-1741-4028-B8EF-6DDCECE4C9B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1C34BCB-1741-4028-B8EF-6DDCECE4C9B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1C34BCB-1741-4028-B8EF-6DDCECE4C9B4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
