@@ -1,4 +1,5 @@
 ﻿using PostToys.Common;
+using PostToys.Parse.Model;
 using PostToys.Post.Http;
 using PostToys.Post.Model;
 using Spectre.Console;
@@ -17,6 +18,44 @@ public static class PrintBoy
     /// </summary>
     /// <param name="boy"></param>
     public static void Print(this Boy boy)
+    {
+        if (boy.Toy == new Toy())
+        {
+            PrintError($"{boy.ReasonPhrase}");
+            return;
+        }
+
+        PrintToy(boy);
+
+        Print($"{boy.Uri} {boy.Version} ", true, false);
+
+        var state = $"{Convert.ToInt32(boy.StatusCode)} [{boy.ReasonPhrase}]";
+        PrintMessage(state, boy.IsSuccessStatusCode, afterNewLine: false);
+
+        PrintFormatText($" {boy.TakeTime}ms", foreground: Color.DarkMagenta);
+
+        if (boy.Header is { Count: > 0 })
+        {
+            foreach (var (key, value) in boy.Header)
+            {
+                Print($"{key}: {value.Aggregate((x1, x2) => $"{x1}; {x2}")}");
+            }
+        }
+
+        if (boy.Body is { Length: > 0 })
+        {
+            Print(boy.Body, beforeNewLine: true);
+        }
+
+        PrintSeparator($"{boy.Toy.Name.Trim()} request end");
+        Console.Beep();
+    }
+
+    /// <summary>
+    /// 打印 <see cref="Toy"/>
+    /// </summary>
+    /// <param name="boy"><see cref="Boy"/></param>
+    private static void PrintToy(Boy boy)
     {
         var toy = boy.Toy;
 
@@ -49,32 +88,55 @@ public static class PrintBoy
         {
             Print(toy.Body, beforeNewLine: true);
         }
+    }
 
-        Print($"{boy.Uri} {boy.Version} ", true, false);
+    /// <summary>
+    /// 打印失败消息
+    /// </summary>
+    /// <param name="message">消息内容</param>
+    /// <param name="decoration">文本修饰<see cref="Decoration"/></param>
+    /// <param name="beforeNewLine">是否前置换行</param>
+    /// <param name="afterNewLine">是否后置换行</param>
+    private static void PrintError(
+        string message, Decoration decoration = Decoration.None,
+        bool beforeNewLine = false, bool afterNewLine = true)
+    {
+        PrintFormatText(message, Color.DarkRed, Color.Red3_1, decoration, beforeNewLine, afterNewLine);
+    }
 
-        var state = $"{Convert.ToInt32(boy.StatusCode)} [{boy.ReasonPhrase}]";
-        var (foreground, background) = boy.IsSuccessStatusCode
-            ? (Color.DarkGreen, Color.LightGreen)
-            : (Color.DarkRed, Color.Red3_1);
-        PrintFormatText(state, foreground, background, afterNewLine: false);
+    /// <summary>
+    /// 打印成功消息
+    /// </summary>
+    /// <param name="message">消息内容</param>
+    /// <param name="decoration">文本修饰<see cref="Decoration"/></param>
+    /// <param name="beforeNewLine">是否前置换行</param>
+    /// <param name="afterNewLine">是否后置换行</param>
+    private static void PrintSuccess(
+        string message, Decoration decoration = Decoration.None,
+        bool beforeNewLine = false, bool afterNewLine = true)
+    {
+        PrintFormatText(message, Color.DarkGreen, Color.LightGreen, decoration, beforeNewLine, afterNewLine);
+    }
 
-        PrintFormatText($" {boy.TakeTime}ms", foreground: Color.DarkMagenta);
-        
-        if (boy.Header is { Count: > 0 })
+    /// <summary>
+    /// 打印消息，包括成功或失败
+    /// </summary>
+    /// <param name="message">消息内容</param>
+    /// <param name="succeed">是否成功消息</param>
+    /// <param name="decoration">文本修饰<see cref="Decoration"/></param>
+    /// <param name="beforeNewLine">是否前置换行</param>
+    /// <param name="afterNewLine">是否后置换行</param>
+    private static void PrintMessage(
+        string message, bool succeed, Decoration decoration = Decoration.None,
+        bool beforeNewLine = false, bool afterNewLine = true)
+    {
+        if (succeed)
         {
-            foreach (var (key, value) in boy.Header)
-            {
-                Print($"{key}: {value.Aggregate((x1, x2) => $"{x1}; {x2}")}");
-            }
+            PrintSuccess(message, decoration, beforeNewLine, afterNewLine);
+            return;
         }
 
-        if (boy.Body is { Length: > 0 })
-        {
-            Print(boy.Body, beforeNewLine: true);
-        }
-
-        PrintSeparator($"{toy.Name.Trim()} request end");
-        Console.Beep();
+        PrintError(message, decoration, beforeNewLine, afterNewLine);
     }
 
     /// <summary>

@@ -11,7 +11,7 @@ public record struct Boy
     /// <summary>
     /// 请求信息
     /// </summary>
-    public Toy Toy { get; init; }
+    public Toy  Toy { get; init; }
 
     /// <summary>
     /// 请求链接

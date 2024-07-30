@@ -9,13 +9,12 @@ namespace PostToys.Parse.Markdown;
 /// <summary>
 /// markdown 解析器
 /// </summary>
-public class Parser : AbstractParser
+public class MarkdownParser : AbstractParser
 {
     /// <summary>
     /// 私有构造器
     /// </summary>
-    /// <param name="lines"></param>
-    private Parser(string[] lines) : base(lines)
+    public MarkdownParser() 
     {
         // 添加默认处理器
         AddProcessor(MarkdownFlag.Header, new HeaderProcessor());
@@ -25,44 +24,12 @@ public class Parser : AbstractParser
     }
 
     /// <summary>
-    /// 输入行
-    /// </summary>
-    /// <param name="lines">行</param>
-    /// <returns>当前解析器</returns>
-    public static Parser InputLines(string[] lines)
-    {
-        return new Parser(lines);
-    }
-
-    /// <summary>
-    /// 输入文件路径
-    /// </summary>
-    /// <param name="path">文件路径</param>
-    /// <returns>当前解析器</returns>
-    public static Parser InputPath(string path)
-    {
-        return InputLines(PathToLines(path));
-    }
-
-    /// <summary>
-    /// 输入文本内容
-    /// </summary>
-    /// <param name="text">文本内容</param>
-    /// <param name="lineSeparator">行分隔符，默认为：\r\n</param>
-    /// <returns>文本行</returns>
-    public static Parser InputText(string text, string lineSeparator = "\r\n")
-    {
-        return new Parser(TextToLines(text, lineSeparator));
-    }
-
-
-    /// <summary>
     /// 添加处理器
     /// </summary>
     /// <param name="flag">处理器标志</param>
     /// <param name="processor">处理器</param>
     /// <returns>当前解析器</returns>
-    public Parser AddProcessor(string flag, AbstractProcessor processor)
+    public MarkdownParser AddProcessor(string flag, AbstractProcessor processor)
     {
         AddProcessor(flag, processor, (success, s) =>
         {
@@ -76,7 +43,7 @@ public class Parser : AbstractParser
     /// </summary>
     /// <param name="processors">处理器字典，key：处理器标志，value：处理器</param>
     /// <returns>当前的解析器</returns>
-    public Parser AddProcessor(Dictionary<string, AbstractProcessor> processors)
+    public MarkdownParser AddProcessor(Dictionary<string, AbstractProcessor> processors)
     {
         AddProcessor(processors, (success, s) =>
         {
@@ -186,9 +153,10 @@ public class Parser : AbstractParser
 
         return new Toy
         {
+            Type = "HTTP",
             Name = (request.ParentId == null
                 ? ""
-                : nodeDictionary[(int)request.ParentId].Content + "@") + request.Content,
+                : nodeDictionary[(int)request.ParentId].Content.Trim() + "@") + request.Content.Trim(),
             Url = url,
             Method = method,
             Version = version,

@@ -1,5 +1,4 @@
-﻿using System.Text;
-using PostToys.Parse.Markdown.Model;
+﻿using PostToys.Parse.Markdown.Model;
 using PostToys.Parse.Markdown.Processor;
 using PostToys.Parse.Model;
 
@@ -8,7 +7,7 @@ namespace PostToys.Parse.Markdown;
 /// <summary>
 /// 解析器抽象类
 /// </summary>
-public abstract class AbstractParser(string[] lines) : IParser
+public abstract class AbstractParser : IParser
 {
     #region private field
 
@@ -20,7 +19,7 @@ public abstract class AbstractParser(string[] lines) : IParser
     /// <summary>
     /// 输入的 markdown 行
     /// </summary>
-    private readonly string[] _lines = lines;
+    private readonly List<string> _lines = [];
 
     /// <summary>
     /// 解析出的 markdown 节点
@@ -35,7 +34,7 @@ public abstract class AbstractParser(string[] lines) : IParser
     /// <summary>
     /// 处理器
     /// </summary>
-    private readonly Dictionary<string, AbstractProcessor?> _processors = [];
+    private readonly Dictionary<string, AbstractProcessor> _processors = [];
 
     #endregion
 
@@ -44,26 +43,22 @@ public abstract class AbstractParser(string[] lines) : IParser
     /// <summary>
     /// 转换为 <see cref="Toy"/> 列表
     /// </summary>
+    /// <param name="lines">输入的文本行</param>
     /// <returns><see cref="Toy"/>列表</returns>
-    public List<Toy> Toys()
+    public List<Toy> Toys(string[] lines)
     {
+        _lines.AddRange(lines);
+
         Parse();
 
         if (_nodes.Count == 0) return [];
 
-        return _nodes
+        var list = _nodes
             .Where(FindNodeForToyFunc())
             .Select(NodeToToy)
             .ToList();
-    }
-
-    /// <summary>
-    /// 转换为 <see cref="Toy"/> 字典，key：<see cref="Toy"/> 名称，value：<see cref="Toy"/>  
-    /// </summary>
-    /// <returns><see cref="Toy"/> 字典</returns>
-    public Dictionary<string, Toy> ToyDictionary()
-    {
-        return Toys().ToDictionary(toy => toy.Name, toy => toy);
+        Clear();
+        return list;
     }
 
     #endregion
@@ -126,27 +121,6 @@ public abstract class AbstractParser(string[] lines) : IParser
         return this;
     }
 
-    /// <summary>
-    /// 文件全路径转文件内容行
-    /// </summary>
-    /// <param name="path">文件全路径</param>
-    /// <returns>文件内容行</returns>
-    protected static string[] PathToLines(string path)
-    {
-        return File.ReadAllLines(path, Encoding.UTF8);
-    }
-
-    /// <summary>
-    /// 文本转文本行
-    /// </summary>
-    /// <param name="text">文本内容</param>
-    /// <param name="lineSeparator">行分隔符，默认为：\r\n</param>
-    /// <returns>文本行</returns>
-    protected static string[] TextToLines(string text, string lineSeparator = "\r\n")
-    {
-        return string.IsNullOrWhiteSpace(text) ? [] : text.Split(lineSeparator);
-    }
-
     #endregion
 
     #region private method
@@ -156,19 +130,29 @@ public abstract class AbstractParser(string[] lines) : IParser
     /// </summary>
     private void Parse()
     {
-        if (_lines.Length == 0) return;
+        if (_lines.Count == 0) return;
 
-        for (var i = 0; i < _lines.Length; i++)
+        for (var i = 0; i < _lines.Count; i++)
         {
             var line = _lines[i];
             if (string.IsNullOrWhiteSpace(line)) continue;
 
             var flag = GetProcessorFlag(line.Trim());
-            if (_processors.TryGetValue(flag, out var processor) && processor is not null)
+            if (_processors.TryGetValue(flag, out var processor))
             {
                 processor.TryToNode(_nodes, _lines, ref i, NextId);
             }
         }
+    }
+
+    /// <summary>
+    /// 清理缓存
+    /// </summary>
+    private void Clear()
+    {
+        _lines.Clear();
+        _nodes.Clear();
+        _nodeDictionary.Clear();
     }
 
     #endregion

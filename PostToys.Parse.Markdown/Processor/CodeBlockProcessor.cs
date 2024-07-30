@@ -27,7 +27,7 @@ public class CodeBlockProcessor : AbstractProcessor
     /// <param name="currentLineIndex">当前所在行索引</param>
     /// <param name="id">生成节点的id</param>
     /// <returns>是否转换成功</returns>
-    public override bool TryToNode(List<Node> nodes, string[] lines, ref int currentLineIndex, int id)
+    public override bool TryToNode(List<Node> nodes, List<string> lines, ref int currentLineIndex, int id)
     {
         var currentLine = lines[currentLineIndex];
         if (!Belong(currentLine)) return false;
@@ -35,7 +35,7 @@ public class CodeBlockProcessor : AbstractProcessor
         var lang = currentLine.Replace(MarkdownFlag.CodeBlock, "").Trim();
 
         currentLineIndex++;
-        if (currentLineIndex >= lines.Length) return false;
+        if (currentLineIndex >= lines.Count) return false;
 
         var (value, linesIndex) = ParseMultiLine(
             lines,
@@ -47,7 +47,7 @@ public class CodeBlockProcessor : AbstractProcessor
         CodeBlock code = new()
         {
             Id = id,
-            Content = value,
+            Content = value.Trim(),
             Lang = lang,
             LinesIndex = linesIndex
         };

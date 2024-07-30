@@ -1,9 +1,9 @@
 ﻿namespace PostToys.Post.Http;
 
 /// <summary>
-/// 公告扩展方法
+/// http扩展方法
 /// </summary>
-public static class CommonExtensions
+public static class HttpExtensions
 {
     /// <summary>
     /// 请求参数转字符串

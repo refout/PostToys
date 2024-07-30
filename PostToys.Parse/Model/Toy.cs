@@ -7,6 +7,11 @@
 public record struct Toy
 {
     /// <summary>
+    /// 类型
+    /// </summary>
+    public string Type { get; init; }
+    
+    /// <summary>
     /// 名称
     /// </summary>
     public string Name { get; init; }

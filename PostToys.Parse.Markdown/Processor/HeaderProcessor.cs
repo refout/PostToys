@@ -27,7 +27,7 @@ public class HeaderProcessor : AbstractProcessor
     /// <param name="currentLineIndex">当前所在行索引</param>
     /// <param name="id">生成节点的id</param>
     /// <returns>是否转换成功</returns>
-    public override bool TryToNode(List<Node> nodes, string[] lines, ref int currentLineIndex, int id)
+    public override bool TryToNode(List<Node> nodes, List<string> lines, ref int currentLineIndex, int id)
     {
         var currentLine = lines[currentLineIndex];
 
@@ -37,7 +37,7 @@ public class HeaderProcessor : AbstractProcessor
         Header header = new()
         {
             Id = id,
-            Content = currentLine[level..],
+            Content = currentLine[level..].Trim(),
             LinesIndex = [currentLineIndex + 1],
             Level = level,
             Order = HeaderOrder(nodes, level)

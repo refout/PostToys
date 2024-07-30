@@ -24,7 +24,7 @@ public abstract class AbstractProcessor
     /// <param name="currentLineIndex">当前所在行索引</param>
     /// <param name="id">生成节点的id</param>
     /// <returns>是否转换成功</returns>
-    public abstract bool TryToNode(List<Node> nodes, string[] lines, ref int currentLineIndex, int id);
+    public abstract bool TryToNode(List<Node> nodes, List<string> lines, ref int currentLineIndex, int id);
 
     /// <summary>
     /// 解析多行内容为一个节点
@@ -36,7 +36,7 @@ public abstract class AbstractProcessor
     /// <param name="finishFunc">读取多行内容结束的标识</param>
     /// <returns>content: 最终获取到的节点的内容， linesIndex：多行内容的行索引</returns>
     protected static (string content, List<int> linesIndex) ParseMultiLine(
-        string[] lines, ref int currentLineIndex, string separator,
+        List<string> lines, ref int currentLineIndex, string separator,
         Func<string, string> handlerLineFunc, Func<string, bool> finishFunc)
     {
         StringBuilder builder = new();
@@ -51,12 +51,12 @@ public abstract class AbstractProcessor
 
             linesIndex.Add(currentLineIndex + 1);
 
-            if (currentLineIndex + 1 >= lines.Length) break;
+            if (currentLineIndex + 1 >= lines.Count) break;
             currentLine = lines[++currentLineIndex];
         }
 
         builder.Remove(builder.Length - separator.Length, separator.Length);
-        return (builder.ToString(), linesIndex);
+        return (builder.ToString().Trim(), linesIndex);
     }
 
     /// <summary>
@@ -67,7 +67,7 @@ public abstract class AbstractProcessor
     /// <param name="separator">多行内容转换为节点内容的分隔符</param>
     /// <param name="finishFunc">读取多行内容结束的标识</param>
     /// <returns>content: 最终获取到的节点的内容， linesIndex：多行内容的行索引</returns>
-    protected static (string, List<int> linesIndex) ParseMultiLine(string[] lines, ref int currentLineIndex,
+    protected static (string, List<int> linesIndex) ParseMultiLine(List<string> lines, ref int currentLineIndex,
         string separator, Func<string, bool> finishFunc)
     {
         return ParseMultiLine(lines, ref currentLineIndex, separator, currentLine => currentLine, finishFunc);
