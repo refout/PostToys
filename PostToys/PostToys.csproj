@@ -13,6 +13,7 @@
         <ProjectReference Include="..\PostToys.Parse.Markdown\PostToys.Parse.Markdown.csproj"/>
         <ProjectReference Include="..\PostToys.Parse\PostToys.Parse.csproj" />
         <ProjectReference Include="..\PostToys.Post.Http\PostToys.Post.Http.csproj" />
+        <ProjectReference Include="..\PostToys.Variable\PostToys.Variable.csproj" />
     </ItemGroup>
 
     <ItemGroup>
