@@ -87,6 +87,11 @@ public class IdCard
     /// <summary>
     /// 获取证件号生日
     /// </summary>
+    public DateTime BirthdayDateTime => new(_birthday.Year, _birthday.Month, _birthday.Day);
+
+    /// <summary>
+    /// 获取证件号生日
+    /// </summary>
     public string BirthdayFormat => _birthday.Format();
 
     /// <summary>

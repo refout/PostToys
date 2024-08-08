@@ -49,13 +49,13 @@ public static class RandomIdCard
     /// <summary>
     /// 生成一个随机证件号
     /// </summary>
-    public static string IdCardNumber =>
+    public static string Number =>
         IdCard.Generate(RandomAddressCode, RandomBirthdayCode, RandomSequence).IdCardNumber;
 
     /// <summary>
     /// 生成一个随机证件号对象 <see cref="IdCard"/>
     /// </summary>
-    public static IdCard IdCardObj(
+    public static IdCard IdCardInfo(
         string? address = default,
         int year = MinYear, int month = MinMonth, int day = MinDay)
     {
