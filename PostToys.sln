@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostToys.Post.Http", "PostT
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostToys.Variable", "PostToys.Variable\PostToys.Variable.csproj", "{A7D3FFBB-8EC9-4591-AE52-7461A215E7FC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostToys.Expression", "PostToys.Expression\PostToys.Expression.csproj", "{782B6C42-CC33-4404-BDF2-B08D7B963AFF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,5 +50,9 @@ Global
 		{A7D3FFBB-8EC9-4591-AE52-7461A215E7FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7D3FFBB-8EC9-4591-AE52-7461A215E7FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A7D3FFBB-8EC9-4591-AE52-7461A215E7FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{782B6C42-CC33-4404-BDF2-B08D7B963AFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{782B6C42-CC33-4404-BDF2-B08D7B963AFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{782B6C42-CC33-4404-BDF2-B08D7B963AFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{782B6C42-CC33-4404-BDF2-B08D7B963AFF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
