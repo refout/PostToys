@@ -1,4 +1,5 @@
 ﻿using PostToys.Common;
+using PostToys.Parse.Enum;
 using PostToys.Parse.Markdown.Constant;
 using PostToys.Parse.Markdown.Model;
 using PostToys.Parse.Markdown.Processor;
@@ -14,7 +15,7 @@ public class MarkdownParser : AbstractParser
     /// <summary>
     /// 私有构造器
     /// </summary>
-    public MarkdownParser() 
+    public MarkdownParser()
     {
         // 添加默认处理器
         AddProcessor(MarkdownFlag.Header, new HeaderProcessor());
@@ -95,7 +96,7 @@ public class MarkdownParser : AbstractParser
         var version = "";
         var header = new Dictionary<string, string>();
         var param = new Dictionary<string, object>();
-        var pathVar = Array.Empty<object>();
+        var pathVar = Array.Empty<string>();
         var body = "";
 
         foreach (var item in requestItems)
@@ -128,7 +129,7 @@ public class MarkdownParser : AbstractParser
                 case CodeBlock code when content.Contains("pathVar"):
                     pathVar = code.Lang switch
                     {
-                        "json" => JsonUtil.Deserialize<object[]>(code.Content) ?? [],
+                        "json" => (JsonUtil.Deserialize<object[]>(code.Content) ?? []).Cast<string>().ToArray(),
                         _ => []
                     };
                     break;
@@ -153,7 +154,7 @@ public class MarkdownParser : AbstractParser
 
         return new Toy
         {
-            Type = "HTTP",
+            Type = url.GetToyTypeByUrl(),
             Name = (request.ParentId == null
                 ? ""
                 : nodeDictionary[(int)request.ParentId].Content.Trim() + "@") + request.Content.Trim(),

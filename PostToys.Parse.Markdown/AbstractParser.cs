@@ -36,6 +36,11 @@ public abstract class AbstractParser : IParser
     /// </summary>
     private readonly Dictionary<string, AbstractProcessor> _processors = [];
 
+    /// <summary>
+    /// 获取节点下一个 id
+    /// </summary>
+    private int NextId => Interlocked.Increment(ref _id);
+
     #endregion
 
     #region public method
@@ -64,11 +69,6 @@ public abstract class AbstractParser : IParser
     #endregion
 
     #region protected method
-
-    /// <summary>
-    /// 获取节点下一个 id
-    /// </summary>
-    private int NextId => Interlocked.Increment(ref _id);
 
     /// <summary>
     /// <see cref="Node"/> 转为字典，key：<see cref="Node"/> id，value：<see cref="Node"/>
