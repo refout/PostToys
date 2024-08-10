@@ -1,25 +1,23 @@
 ﻿using System.Text.RegularExpressions;
-using Microsoft.Extensions.DependencyInjection;
+using PostToys.Common;
 
 namespace PostToys.Expression;
 
 /// <summary> 表达式解析 </summary>
 public partial class ExpressionParse
 {
-    /// <summary> <see cref="ServiceProvider" /> </summary>
-    private readonly ServiceProvider _provider;
-
-    /// <summary> <see cref="IServiceCollection" /> </summary>
-    private readonly IServiceCollection _services = new ServiceCollection();
-
+    /// <summary>
+    /// 服务管理器
+    /// </summary>
+    private readonly ServiceManager _serviceManager = new();
+    
     /// <summary> 构造器 </summary>
     public ExpressionParse()
     {
-        _services.AddKeyedSingleton<IExpression, DateTimeExpression>("$date_time");
-        _services.AddKeyedSingleton<IExpression, IdCardExpression>("$id_card");
-        _services.AddKeyedSingleton<IExpression, UuidExpression>("$uuid");
-        _services.AddKeyedSingleton<IExpression, EnvironmentExpression>("env");
-        _provider = _services.BuildServiceProvider();
+        _serviceManager.AddKeyedSingleton<IExpression, DateTimeExpression>("$date_time");
+        _serviceManager.AddKeyedSingleton<IExpression, IdCardExpression>("$id_card");
+        _serviceManager.AddKeyedSingleton<IExpression, UuidExpression>("$uuid");
+        _serviceManager.AddKeyedSingleton<IExpression, EnvironmentExpression>("env");
     }
 
     /// <summary>
@@ -86,7 +84,7 @@ public partial class ExpressionParse
             type = "env";
         }
 
-        var parser = _provider.GetKeyedService<IExpression>(type);
+        var parser = _serviceManager.GetKeyedService<IExpression>(type);
         if (parser == null) return false;
 
         try

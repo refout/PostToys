@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\PostToys.Common\PostToys.Common.csproj" />
       <ProjectReference Include="..\PostToys.Variable\PostToys.Variable.csproj" />
     </ItemGroup>
 
