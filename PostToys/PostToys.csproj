@@ -10,16 +10,17 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\PostToys.Expression\PostToys.Expression.csproj"/>
         <ProjectReference Include="..\PostToys.Parse.Markdown\PostToys.Parse.Markdown.csproj"/>
-        <ProjectReference Include="..\PostToys.Parse\PostToys.Parse.csproj" />
-        <ProjectReference Include="..\PostToys.Post.Http\PostToys.Post.Http.csproj" />
-        <ProjectReference Include="..\PostToys.Variable\PostToys.Variable.csproj" />
+        <ProjectReference Include="..\PostToys.Parse\PostToys.Parse.csproj"/>
+        <ProjectReference Include="..\PostToys.Post.Http\PostToys.Post.Http.csproj"/>
+        <ProjectReference Include="..\PostToys.Variable\PostToys.Variable.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
-      <PackageReference Include="Spectre.Console" Version="0.49.1" />
-      <PackageReference Include="Spectre.Console.Json" Version="0.49.1" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0"/>
+        <PackageReference Include="Spectre.Console" Version="0.49.1"/>
+        <PackageReference Include="Spectre.Console.Json" Version="0.49.1"/>
     </ItemGroup>
 
 </Project>
