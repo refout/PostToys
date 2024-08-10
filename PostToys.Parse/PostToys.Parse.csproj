@@ -6,4 +6,8 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+        <ProjectReference Include="..\PostToys.Common\PostToys.Common.csproj"/>
+    </ItemGroup>
+
 </Project>

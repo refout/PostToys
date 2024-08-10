@@ -1,4 +1,6 @@
-﻿namespace PostToys.Parse.Model;
+﻿using PostToys.Parse.Enum;
+
+namespace PostToys.Parse.Model;
 
 /// <summary>
 /// 请求信息；
@@ -9,7 +11,7 @@ public record struct Toy
     /// <summary>
     /// 类型
     /// </summary>
-    public string Type { get; init; }
+    public ToyType Type { get; init; }
     
     /// <summary>
     /// 名称
@@ -44,7 +46,7 @@ public record struct Toy
     /// <summary>
     /// 路径参数
     /// </summary>
-    public object[] PathVar { get; init; }
+    public string[] PathVar { get; init; }
 
     /// <summary>
     /// 请求体
