@@ -10,9 +10,11 @@ PostToys 是一个用于发送 HTTP 请求并处理响应的应用程序。它�
 - 详细的响应信息，包括状态码、响应头、响应体等
 - 后续将添加与数据库操作相关的功能，可以联合 HTTP 请求一起使用
 
-## 使用到的框架
+## 使用到的框架和库
 
 - [.NET 8](https://dotnet.microsoft.com/download/dotnet/8.0)
+- [Spectre.Console 0.49.1](https://spectreconsole.net/)
+- [Spectre.Console.Json 0.49.1](https://spectreconsole.net/)
 
 ## 安装
 
