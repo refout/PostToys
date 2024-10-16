@@ -11,7 +11,7 @@
 
 ### 1.1 接口地址[url]
 
-> GET https://examples.http-client.intellij.net/get HTTP/3.0
+> GET {{baseUrl}}/get HTTP/3.0
 
 ### 1.2 请求头[header]
 

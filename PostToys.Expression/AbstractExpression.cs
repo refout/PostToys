@@ -24,9 +24,6 @@ public abstract class AbstractExpression : IExpression
     private bool HasOperation => _operation.symbol != default &&
                                  _operation.left.value != string.Empty;
 
-    /// <summary> 是否需要将结果转换为目标格式 </summary>
-    private bool HasTarget => _targetFormat != string.Empty;
-
     /// <summary> 表达式结果计算 </summary>
     /// <param name="expression">表达式</param>
     /// <returns>表达式对应的结果</returns>
@@ -45,11 +42,7 @@ public abstract class AbstractExpression : IExpression
             result = ToBinaryOperate(result);
         }
 
-        // 是否需要转换到目标格式
-        if (HasTarget)
-        {
-            result = ToTarget(result);
-        }
+        result = ToTarget(result);
 
         return result;
     }

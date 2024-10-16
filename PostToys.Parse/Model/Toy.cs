@@ -11,8 +11,8 @@ public readonly record struct Toy
     /// <summary>
     /// 类型
     /// </summary>
-    public ToyType Type { get; init; }
-    
+    public ToyType Type { get => Url.GetToyTypeByUrl(); }
+
     /// <summary>
     /// 名称
     /// </summary>

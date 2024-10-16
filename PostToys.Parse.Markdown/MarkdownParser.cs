@@ -154,7 +154,6 @@ public class MarkdownParser : AbstractParser
 
         return new Toy
         {
-            Type = url.GetToyTypeByUrl(),
             Name = (request.ParentId == null
                 ? ""
                 : nodeDictionary[(int)request.ParentId].Content.Trim() + "@") + request.Content.Trim(),
@@ -184,8 +183,6 @@ public class MarkdownParser : AbstractParser
         url = "";
         version = "";
         if (item.Length < 2) return false;
-
-        if (!item[1].StartsWith("http")) return false;
 
         method = item.First();
         version = "HTTP/1.1";

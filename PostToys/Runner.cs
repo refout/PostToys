@@ -23,7 +23,7 @@ public class Runner
     /// <summary> 执行请求 </summary>
     /// <param name="path">文件路径</param>
     /// <param name="names">请求名称</param>
-    public static Runner Run(string path, string? envPath, params string[] names)
+    public static Runner Run(string path, string? envPath, string? envName, params string[] names)
     {
         var runner = new Runner();
         if (string.IsNullOrWhiteSpace(path)) throw new ArgumentNullException(nameof(path));
@@ -33,8 +33,18 @@ public class Runner
         Dictionary<string, string> env = [];
         if (!string.IsNullOrWhiteSpace(envPath))
         {
-            env = JsonUtil.DeserializeJsonFile<Dictionary<string, object>>(envPath)?
-            .ToDictionary(k => k.Key, v => v.Value?.ToString() ?? "") ?? [];
+            var envContent = JsonUtil.DeserializeJsonFile<Dictionary<string, Dictionary<string, object>>>(envPath) ?? [];
+            if (envName is not null && envContent.TryGetValue(envName, out Dictionary<string, object>? value))
+            {
+                if (value is not null)
+                {
+                    env = (from it in value
+                           where it.Key is not null
+                           where it.Value is not null
+                           select it
+                           ).ToDictionary(k => k.Key, v => v.Value.ToString() ?? string.Empty);
+                }
+            }
         }
 
         var toys = ToyParser.Parse(path);
