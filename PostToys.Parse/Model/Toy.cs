@@ -6,7 +6,7 @@ namespace PostToys.Parse.Model;
 /// 请求信息；
 /// POST 的一个载体
 /// </summary>
-public record struct Toy
+public readonly record struct Toy
 {
     /// <summary>
     /// 类型
@@ -41,7 +41,7 @@ public record struct Toy
     /// <summary>
     /// 请求参数
     /// </summary>
-    public Dictionary<string, object> Param { get; init; }
+    public Dictionary<string, string> Param { get; init; }
 
     /// <summary>
     /// 路径参数

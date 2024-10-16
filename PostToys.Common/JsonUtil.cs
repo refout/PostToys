@@ -13,6 +13,23 @@ public static class JsonUtil
     /// <param name="json">json 字符串</param>
     /// <typeparam name="T">目标对象范型</typeparam>
     /// <returns>转换后的对象</returns>
+    public static T? DeserializeJsonFile<T>(string path)
+    {
+        var json = path.PathToText();
+        if (string.IsNullOrWhiteSpace(json))
+        {
+            return default;
+        }
+
+        return JsonSerializer.Deserialize<T>(json) ?? default;
+    }
+
+    /// <summary>
+    /// json转对象
+    /// </summary>
+    /// <param name="json">json 字符串</param>
+    /// <typeparam name="T">目标对象范型</typeparam>
+    /// <returns>转换后的对象</returns>
     public static T? Deserialize<T>(string json)
     {
         if (string.IsNullOrWhiteSpace(json))

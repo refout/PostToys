@@ -4,13 +4,13 @@ using PostToys.Common;
 namespace PostToys.Expression;
 
 /// <summary> 表达式解析 </summary>
-public partial class ExpressionParse
+public class ExpressionParse
 {
     /// <summary>
     /// 服务管理器
     /// </summary>
     private readonly ServiceManager _serviceManager = new();
-    
+
     /// <summary> 构造器 </summary>
     public ExpressionParse()
     {
@@ -19,13 +19,6 @@ public partial class ExpressionParse
         _serviceManager.AddKeyedSingleton<IExpression, UuidExpression>("$uuid");
         _serviceManager.AddKeyedSingleton<IExpression, EnvironmentExpression>("env");
     }
-
-    /// <summary>
-    /// 表达式正则
-    /// </summary>
-    /// <returns></returns>
-    [GeneratedRegex(@"\{\{(.+?)\}\}")]
-    private static partial Regex ExpressionRegex();
 
     /// <summary> 尝试解析出文本中的表达式 </summary>
     /// <param name="text">文本</param>
@@ -39,9 +32,9 @@ public partial class ExpressionParse
             return false;
         }
 
-        var matches = ExpressionRegex().Matches(text);
+        var matches = RegexGroup.ExpressionRegex().Matches(text);
         expressions = (from Match match in matches
-            select (match.Value, match.Groups[1].Value)).ToList();
+                       select (match.Value, match.Groups[1].Value)).ToList();
         return expressions.Count > 0;
     }
 
@@ -49,7 +42,7 @@ public partial class ExpressionParse
     /// <param name="text">文本</param>
     /// <param name="expressions">表达式及其对应的值</param>
     /// <returns>是否成功</returns>
-    public bool TryParseValue(string text, out List<(string fullexpression, object result)>? expressions)
+    public bool TryParseValue(string text, Dictionary<string, string> env, out List<(string fullexpression, string result)> expressions)
     {
         if (string.IsNullOrEmpty(text))
         {
@@ -57,9 +50,9 @@ public partial class ExpressionParse
             return false;
         }
 
-        var matches = ExpressionRegex().Matches(text);
+        var matches = RegexGroup.ExpressionRegex().Matches(text);
         expressions = (from Match match in matches
-                select (match.Value, TryParseValue(match.Groups[1].Value, out object? value) ? value : match.Value))
+                       select (match.Value, TryParseValue(match.Groups[1].Value.Trim(), env, out string value) ? value : match.Value))
             .ToList();
         return expressions.Count > 0;
     }
@@ -68,9 +61,9 @@ public partial class ExpressionParse
     /// <param name="expression">表达式</param>
     /// <param name="result">表达式对应的值</param>
     /// <returns>是否成功</returns>
-    public bool TryParseValue(string expression, out object? result)
+    public bool TryParseValue(string expression, Dictionary<string, string> env, out string result)
     {
-        result = default;
+        result = string.Empty;
         if (string.IsNullOrWhiteSpace(expression)) return false;
 
         var items = expression.Split('.');
@@ -89,6 +82,7 @@ public partial class ExpressionParse
 
         try
         {
+            parser.Input(env);
             result = parser.Evaluate(expression);
             return true;
         }

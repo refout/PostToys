@@ -10,7 +10,7 @@ public static class HttpExtensions
     /// </summary>
     /// <param name="param">请求参数</param>
     /// <returns>请求参数字符串</returns>
-    public static string ToParamsStr(this Dictionary<string, object> param)
+    public static string ToParamsStr(this Dictionary<string, string> param)
     {
         return param
             .Select(it => $"{it.Key}={it.Value}")

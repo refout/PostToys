@@ -4,7 +4,7 @@
 public class DateTimeExpression : AbstractExpression
 {
     /// <summary> 获取结果 </summary>
-    protected override void ToResult()
+    protected override dynamic ToResult()
     {
         if (Properties is { Length: <= 1 or > 3 })
         {
@@ -22,12 +22,11 @@ public class DateTimeExpression : AbstractExpression
         };
         if (Properties.Length < 3)
         {
-            Result = dt;
-            return;
+            return dt;
         }
 
         var third = Properties[2].Trim();
-        Result = third.ToLower() switch
+        return third.ToLower() switch
         {
             "year" => dt.Year,
             "month" => dt.Month,

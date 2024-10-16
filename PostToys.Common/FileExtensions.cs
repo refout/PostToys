@@ -18,6 +18,16 @@ public static class FileExtensions
     }
 
     /// <summary>
+    /// 文件全路径转文件内容
+    /// </summary>
+    /// <param name="path">文件全路径</param>
+    /// <returns>文件内容</returns>
+    public static string PathToText(this string path)
+    {
+        return File.ReadAllText(path, Encoding.UTF8);
+    }
+    
+    /// <summary>
     /// 文本转文本行
     /// </summary>
     /// <param name="text">文本内容</param>

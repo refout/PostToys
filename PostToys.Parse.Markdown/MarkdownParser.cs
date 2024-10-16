@@ -95,7 +95,7 @@ public class MarkdownParser : AbstractParser
         var method = "";
         var version = "";
         var header = new Dictionary<string, string>();
-        var param = new Dictionary<string, object>();
+        var param = new Dictionary<string, string>();
         var pathVar = Array.Empty<string>();
         var body = "";
 
@@ -122,7 +122,7 @@ public class MarkdownParser : AbstractParser
                 case CodeBlock code when content.Contains("param"):
                     param = code.Lang switch
                     {
-                        "json" => JsonUtil.Deserialize<Dictionary<string, object>>(code.Content) ?? [],
+                        "json" => JsonUtil.Deserialize<Dictionary<string, object>>(code.Content)?.ToDictionary(k => k.Key, k => k.Value?.ToString() ?? "") ?? [],
                         _ => []
                     };
                     break;

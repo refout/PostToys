@@ -3,7 +3,7 @@
 namespace PostToys.Expression;
 
 /// <summary> 表达式解析抽象类 </summary>
-public abstract partial class AbstractExpression : IExpression
+public abstract class AbstractExpression : IExpression
 {
     /// <summary> 表达式 </summary>
     private string _expression = string.Empty;
@@ -16,9 +16,6 @@ public abstract partial class AbstractExpression : IExpression
 
     /// <summary> 表达式的转换目标 </summary>
     private string _targetFormat = string.Empty;
-
-    /// <summary> 表达式结果 </summary>
-    protected dynamic Result = string.Empty;
 
     /// <summary> 表达式属性的字段 </summary>
     protected string[] Properties => Property.Split('.', StringSplitOptions.RemoveEmptyEntries);
@@ -33,46 +30,52 @@ public abstract partial class AbstractExpression : IExpression
     /// <summary> 表达式结果计算 </summary>
     /// <param name="expression">表达式</param>
     /// <returns>表达式对应的结果</returns>
-    public dynamic Evaluate(string expression)
+    public string Evaluate(string expression)
     {
         _expression = expression;
         // 表达式解析
         (Property, _operation, _targetFormat) = ParseExpression();
 
         // 获取结果
-        ToResult();
+        dynamic result = ToResult();
 
         // 是否需要执行计算
-        if (HasOperation) ToBinaryOperate();
-        
-        // 是否需要转换到目标格式
-        if (HasTarget) ToTarget();
+        if (HasOperation)
+        {
+            result = ToBinaryOperate(result);
+        }
 
-        return Result;
+        // 是否需要转换到目标格式
+        if (HasTarget)
+        {
+            result = ToTarget(result);
+        }
+
+        return result;
     }
 
     /// <summary> 获取结果 </summary>
-    protected abstract void ToResult();
+    protected abstract dynamic ToResult();
 
     /// <summary> 将结果转换为目标格式 </summary>
-    private void ToTarget()
+    private string ToTarget(dynamic result)
     {
-        Result = Result switch
+        return result switch
         {
             DateTime time => time.ToString(string.IsNullOrWhiteSpace(_targetFormat)
                 ? "yyyy-MM-dd HH:mm:ss"
                 : _targetFormat),
-            int number => number,
+            int number => number.ToString(),
             _ => throw new ArgumentException(
-                $"Unknown source data type that cannot be converted to the target type: {Result.GetType()}.")
+                $"Unknown source data type that cannot be converted to the target type: {result.GetType()}.")
         };
     }
 
     /// <summary> 对结果执行运算 </summary>
     /// <exception cref="ArgumentException">表达式异常</exception>
-    private void ToBinaryOperate()
+    private dynamic ToBinaryOperate(dynamic result)
     {
-        Result = Result switch
+        return result switch
         {
             DateTime dateTime => Binary(dateTime),
             int number => Binary(number),
@@ -108,9 +111,9 @@ public abstract partial class AbstractExpression : IExpression
 
         (string value, string unit) ParseUnit(string value)
         {
-            if (NumberRegex().IsMatch(value)) return (value, string.Empty);
+            if (RegexGroup.NumberRegex().IsMatch(value)) return (value, string.Empty);
 
-            var match = UnitRegex().Match(value);
+            var match = RegexGroup.UnitRegex().Match(value);
             return (match.Groups[1].Value.Replace(" ", ""), match.Groups[2].Value.Trim().Replace(" ", ""));
         }
 
@@ -171,13 +174,11 @@ public abstract partial class AbstractExpression : IExpression
         };
     }
 
-    /// <summary> 匹配时间数值及单位的正则表达式 </summary>
-    /// <returns>正则表达式</returns>
-    [GeneratedRegex(@"\b(\d+)([Mmsdyhw]|ms)\b")]
-    private static partial Regex UnitRegex();
-
-    /// <summary> 匹配数字的正则表达式 </summary>
-    /// <returns>正则表达式</returns>
-    [GeneratedRegex(@"\b(\d+)\b")]
-    private static partial Regex NumberRegex();
+    /// <summary>
+    /// 外部值传入
+    /// </summary>
+    /// <param name="value">传入的值</param>
+    public void Input(Dictionary<string, string> value)
+    {
+    }
 }
