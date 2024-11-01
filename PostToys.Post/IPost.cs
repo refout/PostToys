@@ -12,6 +12,6 @@ public interface IPost
     /// 请求执行方法
     /// </summary>
     /// <param name="toy">请求内容：<see cref="Toy"/></param>
-    /// <returns>响应内容：<see cref="Boy"/></returns>
-    Boy Post(Toy toy);
+    /// <returns>响应内容：<see cref="IBoy"/></returns>
+    IBoy Post (Toy toy)  ;
 }

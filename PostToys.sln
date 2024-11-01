@@ -1,5 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# 
+VisualStudioVersion = 17.5.002.0
+MinimumVisualStudioVersion = 
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostToys", "PostToys\PostToys.csproj", "{19C0591F-A249-472C-946A-BAD76D4C399A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostToys.Parse.Markdown", "PostToys.Parse.Markdown\PostToys.Parse.Markdown.csproj", "{C15C72AF-C6E3-4B61-8F70-068BA56023D4}"
@@ -15,6 +18,14 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostToys.Variable", "PostToys.Variable\PostToys.Variable.csproj", "{A7D3FFBB-8EC9-4591-AE52-7461A215E7FC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostToys.Expression", "PostToys.Expression\PostToys.Expression.csproj", "{782B6C42-CC33-4404-BDF2-B08D7B963AFF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostToys.Post.Database", "PostToys.Post.Database\PostToys.Post.Database.csproj", "{21915870-8D9F-46B8-8D25-215D80FF1CED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostToys.Post.Database.MySql", "PostToys.Post.Database.Mysql\PostToys.Post.Database.MySql.csproj", "{2213B8E5-BAF4-40A7-8377-720C1F19FC58}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostToys.Post.Database.PostgreSql", "PostToys.Post.Database.PostgreSql\PostToys.Post.Database.PostgreSql.csproj", "{10F1DF96-955E-47F9-A417-5DC91435DDB0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostToys.Post.Database.Abstract", "PostToys.Post.Database.Abstract\PostToys.Post.Database.Abstract.csproj", "{0D4A2B0D-14AD-4276-85FA-2EF46075E9BF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -54,5 +65,24 @@ Global
 		{782B6C42-CC33-4404-BDF2-B08D7B963AFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{782B6C42-CC33-4404-BDF2-B08D7B963AFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{782B6C42-CC33-4404-BDF2-B08D7B963AFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21915870-8D9F-46B8-8D25-215D80FF1CED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21915870-8D9F-46B8-8D25-215D80FF1CED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21915870-8D9F-46B8-8D25-215D80FF1CED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21915870-8D9F-46B8-8D25-215D80FF1CED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2213B8E5-BAF4-40A7-8377-720C1F19FC58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2213B8E5-BAF4-40A7-8377-720C1F19FC58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2213B8E5-BAF4-40A7-8377-720C1F19FC58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2213B8E5-BAF4-40A7-8377-720C1F19FC58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10F1DF96-955E-47F9-A417-5DC91435DDB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10F1DF96-955E-47F9-A417-5DC91435DDB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10F1DF96-955E-47F9-A417-5DC91435DDB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10F1DF96-955E-47F9-A417-5DC91435DDB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D4A2B0D-14AD-4276-85FA-2EF46075E9BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D4A2B0D-14AD-4276-85FA-2EF46075E9BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D4A2B0D-14AD-4276-85FA-2EF46075E9BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D4A2B0D-14AD-4276-85FA-2EF46075E9BF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal

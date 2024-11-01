@@ -6,6 +6,7 @@ using PostToys.Parse.Enum;
 using PostToys.Parse.Markdown;
 using PostToys.Parse.Model;
 using PostToys.Post;
+using PostToys.Post.Database;
 using PostToys.Post.Http;
 using PostToys.Post.Model;
 
@@ -18,11 +19,12 @@ public class Runner
 {
     private static readonly PostManger PostManger = new();
     private static readonly ToyParser ToyParser = new();
-    private static readonly ExpressionParse parse = new();
 
     /// <summary> 执行请求 </summary>
     /// <param name="path">文件路径</param>
+    /// <param name="envName"></param>
     /// <param name="names">请求名称</param>
+    /// <param name="envPath"></param>
     public static Runner Run(string path, string? envPath, string? envName, params string[] names)
     {
         var runner = new Runner();
@@ -33,27 +35,23 @@ public class Runner
         Dictionary<string, string> env = [];
         if (!string.IsNullOrWhiteSpace(envPath))
         {
-            var envContent = JsonUtil.DeserializeJsonFile<Dictionary<string, Dictionary<string, object>>>(envPath) ?? [];
-            if (envName is not null && envContent.TryGetValue(envName, out Dictionary<string, object>? value))
+            var envContent = JsonUtil.FromJsonFile<Dictionary<string, Dictionary<string, object>>>(envPath) ?? [];
+            if (envName is not null && envContent.TryGetValue(envName, out var value))
             {
-                if (value is not null)
-                {
-                    env = (from it in value
-                           where it.Key is not null
-                           where it.Value is not null
-                           select it
-                           ).ToDictionary(k => k.Key, v => v.Value.ToString() ?? string.Empty);
-                }
+                env = (from it in value
+                        where it.Key is not null
+                        where it.Value is not null
+                        select it
+                    ).ToDictionary(k => k.Key, v => v.Value.ToString() ?? string.Empty);
             }
         }
 
-        var toys = ToyParser.Parse(path);
+        var toys = ToyParser.ParseFile(path, env);
 
         foreach (var name in names)
         {
             if (toys.TryGetValue(name, out var toy))
             {
-                toy = Parse(toy, env);
                 var boy = PostManger.Post(toy);
                 boy.Print();
                 continue;
@@ -63,91 +61,6 @@ public class Runner
         }
 
         return runner;
-    }
-
-    /// <summary>
-    /// 解析表达式并替换为值
-    /// </summary>
-    /// <param name="toy">请求信息</param>
-    /// <param name="env">环境变量</param>
-    /// <returns>替换表达式值后的请求信息</returns>
-    private static Toy Parse(Toy toy, Dictionary<string, string> env)
-    {
-        env = Parse(env, env);
-        return toy with
-        {
-            Url = Parse(toy.Url, env),
-            Header = Parse(toy.Header, env),
-            Param = Parse(toy.Param, env),
-            PathVar = Parse(toy.PathVar, env),
-            Body = Parse(toy.Body, env),
-        };
-    }
-
-    /// <summary>
-    /// 解析表达式并替换为值
-    /// </summary>
-    /// <param name="pairs">含表达式的字典</param>
-    /// <param name="env">环境变量</param>
-    /// <returns>替换表达式值后的字典</returns>
-    private static Dictionary<string, string> Parse(Dictionary<string, string> pairs, Dictionary<string, string> env)
-    {
-        if (pairs is { Count: <= 0 })
-        {
-            return pairs;
-        }
-
-        foreach (var pair in pairs)
-        {
-            pairs[pair.Key] = Parse(pair.Value, env);
-        }
-        return pairs;
-    }
-
-    /// <summary>
-    /// 解析表达式并替换为值
-    /// </summary>
-    /// <param name="items">含表达式的数组</param>
-    /// <param name="env">环境变量</param>
-    /// <returns>替换表达式值后的数组</returns>
-    private static string[] Parse(string[] items, Dictionary<string, string> env)
-    {
-        if (items is { Length: <= 0 })
-        {
-            return items;
-        }
-
-        for (int i = 0; i < items.Length; i++)
-        {
-            items[i] = Parse(items[i], env);
-        }
-        return items;
-    }
-
-    /// <summary>
-    /// 解析表达式并替换为值
-    /// </summary>
-    /// <param name="text">含表达式的文本</param>
-    /// <param name="env">环境变量</param>
-    /// <returns>替换表达式值后的文本</returns>
-    private static string Parse(string text, Dictionary<string, string> env)
-    {
-        if (text.Length == 0)
-        {
-            return text;
-        }
-
-        if (parse.TryParseValue(text, env, out List<(string fullexpression, string result)> expressions))
-        {
-            if (expressions == null || expressions.Count == 0)
-            {
-                return text;
-            }
-
-            expressions.ForEach(it => text = text.Replace(it.fullexpression, it.result));
-        }
-
-        return text;
     }
 }
 
@@ -176,17 +89,87 @@ public class ToyParser
     /// </summary>
     /// <param name="path">文件路径</param>
     /// <returns>请求信息</returns>
+    /// <param name="env">环境变量</param>
     /// <exception cref="ArgumentNullException">文件路径为空异常</exception>
     /// <exception cref="ArgumentException">获取解析器异常</exception>
-    public Dictionary<string, Toy> Parse(string path)
+    public Dictionary<string, Toy> ParseFile(string path, Dictionary<string, string> env)
     {
         if (string.IsNullOrWhiteSpace(path)) throw new ArgumentNullException(nameof(path));
 
         var extension = path.GetExtensionName().Trim().ToLower();
 
         var parser = _serviceManager.GetKeyedService<IParser>(extension) ??
-        throw new ArgumentException($"Invalid file type: {extension}.");
-        return parser.ToyDictionary(path.PathToLines());
+                     throw new ArgumentException($"Invalid file type: {extension}.");
+        var lines = path.PathToLines();
+        env = Parse(env, env);
+        lines = Parse(lines, env);
+        return parser.ToyDictionary(lines);
+    }
+
+    /// <summary>
+    /// 解析表达式并替换为值
+    /// </summary>
+    /// <param name="pairs">含表达式的字典</param>
+    /// <param name="env">环境变量</param>
+    /// <returns>替换表达式值后的字典</returns>
+    private static Dictionary<string, string> Parse(Dictionary<string, string> pairs, Dictionary<string, string> env)
+    {
+        if (pairs is { Count: <= 0 })
+        {
+            return pairs;
+        }
+
+        foreach (var pair in pairs)
+        {
+            pairs[pair.Key] = Parse(pair.Value, env);
+        }
+
+        return pairs;
+    }
+
+    /// <summary>
+    /// 解析表达式并替换为值
+    /// </summary>
+    /// <param name="items">含表达式的数组</param>
+    /// <param name="env">环境变量</param>
+    /// <returns>替换表达式值后的数组</returns>
+    private static string[] Parse(string[] items, Dictionary<string, string> env)
+    {
+        if (items is { Length: <= 0 })
+        {
+            return items;
+        }
+
+        for (var i = 0; i < items.Length; i++)
+        {
+            items[i] = Parse(items[i], env);
+        }
+
+        return items;
+    }
+
+    /// <summary>
+    /// 解析表达式并替换为值
+    /// </summary>
+    /// <param name="text">含表达式的文本</param>
+    /// <param name="env">环境变量</param>
+    /// <returns>替换表达式值后的文本</returns>
+    private static string Parse(string text, Dictionary<string, string> env)
+    {
+        if (text.Length == 0)
+        {
+            return text;
+        }
+
+        if (!ExpressionParse.TryParseValue(text, env, out List<(string fullexpression, string result)> expressions)) return text;
+        if (expressions.Count == 0)
+        {
+            return text;
+        }
+
+        expressions.ForEach(it => text = text.Replace(it.fullexpression, it.result));
+
+        return text;
     }
 
     /// <summary>
@@ -219,6 +202,7 @@ public class PostManger
     public PostManger()
     {
         _serviceManager.AddKeyedSingleton<IPost, HttpPost>(ToyType.Http);
+        _serviceManager.AddKeyedSingleton<IPost, DatabasePost>(ToyType.Database);
     }
 
     /// <summary>
@@ -227,10 +211,11 @@ public class PostManger
     /// <param name="toy">请求信息</param>
     /// <returns>响应信息</returns>
     /// <exception cref="ArgumentException">获取请求接口为空</exception>
-    public Boy Post(Toy toy)
+    public IBoy Post(Toy toy)
     {
-        var post = _serviceManager.GetKeyedService<IPost>(toy.Type) ??
-        throw new ArgumentException($"Invalid toy type: {toy.Type}.");
+        var type = toy.Url.GetToyType();
+        var post = _serviceManager.GetKeyedService<IPost>(type) ??
+                   throw new ArgumentException($"Invalid toy type: {type}.");
         return post.Post(toy);
     }
 }

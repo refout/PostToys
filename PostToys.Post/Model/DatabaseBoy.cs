@@ -1,37 +1,28 @@
-﻿using System.Net;
-using PostToys.Parse.Model;
+﻿using PostToys.Parse.Model;
 
 namespace PostToys.Post.Model;
 
-/// <summary>
-/// 请求响应
-/// </summary>
-public record struct Boy
+public readonly record struct DatabaseBoy : IBoy
 {
     /// <summary>
     /// 请求信息
     /// </summary>
-    public Toy  Toy { get; init; }
+    public Toy Toy { get; init; }
+    
+    /// <summary>
+    /// 请求方法
+    /// </summary> 
+    public string Method { get; init; }
 
     /// <summary>
     /// 请求链接
     /// </summary>
-    public Uri? Uri { get; init; }
+    public string Url { get; init; }
 
     /// <summary>
     /// 响应内容
     /// </summary>
     public string Body { get; init; }
-
-    /// <summary>
-    /// 响应内容
-    /// </summary>
-    public Dictionary<string, IEnumerable<string>> Header { get; init; }
-
-    /// <summary>
-    /// 响应状态码
-    /// </summary>
-    public HttpStatusCode StatusCode { get; init; }
 
     /// <summary>
     /// 是否请求成功
@@ -44,12 +35,12 @@ public record struct Boy
     public string ReasonPhrase { get; init; }
 
     /// <summary>
-    /// 实际请求版本信息
-    /// </summary>
-    public string Version { get; init; }
-
-    /// <summary>
     /// 请求耗时，单位：毫秒
     /// </summary>
     public long TakeTime { get; init; }
+    
+    /// <summary>
+    /// 数据库类型
+    /// </summary>
+    public string DatabaseType { get; init; }
 }

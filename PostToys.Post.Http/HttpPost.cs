@@ -20,32 +20,44 @@ public class HttpPost : IPost
         DefaultVersionPolicy = HttpVersionPolicy.RequestVersionExact
     };
 
+    private static readonly ParseUrl ParseUrl = new()
+    {
+        LastPrefix = "HTTP/"
+    };
+
     /// <summary>
     /// http 请求执行方法
     /// </summary>
     /// <param name="toy">请求内容：<see cref="Toy"/></param>
-    /// <returns>响应内容：<see cref="Boy"/></returns>
-    public Boy Post(Toy toy)
+    /// <returns>响应内容：<see cref="IBoy"/></returns>
+    public IBoy Post(Toy toy)
     {
-        var httpVersion = VersionParse(toy.Version);
+        if (!ParseUrl.TryParseUrlExp(toy.Url, out var method, out var requestUri, out var requestVersion))
+        {
+            return new HttpBoy();
+        }
+
+        var httpVersion = VersionParse(requestVersion);
         if (httpVersion == HttpVersion.Unknown)
         {
-            return new Boy()
+            return new HttpBoy()
             {
                 Toy = toy,
                 StatusCode = HttpStatusCode.BadRequest,
                 IsSuccessStatusCode = false,
-                ReasonPhrase = $"Http Version Unknown: {toy.Version}",
-                Version = toy.Version,
+                ReasonPhrase = $"Http Version Unknown: {requestVersion}",
+                Version = requestVersion,
                 TakeTime = 0
             };
         }
 
-        var requestMessage = new HttpRequestMessage();
-        requestMessage.Method = new HttpMethod(toy.Method);
-        requestMessage.RequestUri = BuildUri(toy);
-        requestMessage.Version = httpVersion;
-        requestMessage.VersionPolicy = HttpVersionPolicy.RequestVersionOrLower;
+        var requestMessage = new HttpRequestMessage
+        {
+            Method = new HttpMethod(method),
+            RequestUri = BuildUri(requestUri, toy.PathVar, toy.Param),
+            Version = httpVersion,
+            VersionPolicy = HttpVersionPolicy.RequestVersionOrLower
+        };
         foreach (var (key, value) in toy.Header)
         {
             requestMessage.Headers.TryAddWithoutValidation(key, value);
@@ -66,9 +78,10 @@ public class HttpPost : IPost
         }
         catch (Exception e)
         {
-            return new Boy()
+            return new HttpBoy()
             {
                 Toy = toy,
+                Method = method,
                 StatusCode = HttpStatusCode.BadRequest,
                 IsSuccessStatusCode = false,
                 ReasonPhrase = e.Message,
@@ -86,12 +99,14 @@ public class HttpPost : IPost
         var header = send.Headers.ToDictionary();
         var body = send.Content.ReadAsStringAsync().Result;
 
-        return new Boy()
+        return new HttpBoy
         {
             Toy = toy,
-            Uri = uri,
+            Url = uri!.ToString(),
+            Method = method,
             Body = body,
-            Header = header,
+            RequestHeader = toy.Header,
+            ResponseHeader = header,
             StatusCode = statusCode,
             IsSuccessStatusCode = successStatusCode,
             ReasonPhrase = string.IsNullOrWhiteSpace(phrase) ? "REQUEST SUCCESS" : phrase,
@@ -133,24 +148,23 @@ public class HttpPost : IPost
     /// <summary>
     /// http 请求 uri 构建
     /// </summary>
-    /// <param name="toy">请求信息：<see cref="Toy"/></param>
     /// <returns>http 请求 uri：<see cref="Uri"/></returns>
-    private static Uri BuildUri(Toy toy)
+    private static Uri BuildUri(string url, string[] pathVar, Dictionary<string, string> param)
     {
-        var builder = new UriBuilder(toy.Url);
+        var builder = new UriBuilder(url);
 
-        if (toy.PathVar.Length > 0)
+        if (pathVar.Length > 0)
         {
-            builder.Path += (builder.Path.EndsWith('/') ? "" : "/") + string.Join('/', toy.PathVar);
+            builder.Path += (builder.Path.EndsWith('/') ? "" : "/") + string.Join('/', pathVar);
         }
 
-        if (toy.Param.Count > 0)
+        if (param.Count > 0)
         {
             builder.Query += (string.IsNullOrWhiteSpace(builder.Query)
                 ? ""
                 : builder.Query.EndsWith('&')
                     ? ""
-                    : "&") + toy.Param.ToParamsStr();
+                    : "&") + param.ToParamsStr();
         }
 
         return builder.Uri;

@@ -2,12 +2,7 @@
 
 ## 1 新增
 
-約子載用稿軍俊城韓政造蛮写。理人供就能在登万係森定予会上員次。
-
-条採共辺止問宿徳突省表相細違込病政報設。幹十呪披相豪延間常大経肉著活時移障紙。
-図名振特祭稿表標関岐送白装。時陸対初雑校語約側法通式王岐認代初屋。授好治士義所惑豆巡来報数。
-
-折手部明線登席先済脱整同。来物万配芸合出円害握候設目金。評動悼索務担奪度火易開学論資辺。
+描述
 
 ### 1.1 接口地址[url]
 
@@ -47,3 +42,22 @@
 
 ### 1.4 成功响应[success]
 
+## 2 数据库查询
+
+描述
+
+### 1.1 数据库链接字符串[url]
+
+> DQL host=localhost;port=5432;database=xxx;username=xxx;password=xxx; Postgresql
+
+<!-- > DQL host=localhost;port=3306;database=testdb;username=root;password=yourpassword; MySql -->
+
+### 1.2 请求体[body]
+
+```sql
+select *
+    from changes
+--     where change_id = 1 limit 1
+```
+
+### 1.4 成功响应[success]

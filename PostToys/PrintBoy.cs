@@ -1,6 +1,6 @@
-﻿using PostToys.Common;
+﻿using System.Collections.Immutable;
+using PostToys.Common;
 using PostToys.Parse.Model;
-using PostToys.Post.Http;
 using PostToys.Post.Model;
 using Spectre.Console;
 using Spectre.Console.Json;
@@ -17,77 +17,112 @@ public static class PrintBoy
     /// 打印响应信息：<see cref="Boy"/>
     /// </summary>
     /// <param name="boy"></param>
-    public static void Print(this Boy boy)
+    public static void Print(this IBoy boy)
     {
-        if (boy.Toy == new Toy())
+        var toy = boy.Toy;
+        if (toy == new Toy())
         {
             PrintError($"{boy.ReasonPhrase}");
             return;
         }
 
-        PrintToy(boy);
+        PrintSeparator($"{toy.Name.Trim()} request start");
 
-        Print($"{boy.Uri} {boy.Version} ", true, false);
+        switch (boy)
+        {
+            case HttpBoy httpBoy:
+                PrintHttp(httpBoy);
+                break;
+            case DatabaseBoy databaseBoy:
+                PrintDatabase(databaseBoy);
+                break;
+        }
+
+        PrintSeparator($"{toy.Name.Trim()} request end");
+        Console.Beep();
+    }
+
+    private static void PrintRequestBody(Toy toy)
+    {
+        if (toy.Body is { Length: > 0 })
+        {
+            Print(toy.Body, beforeNewLine: true);
+        }
+    }
+
+    private static void PrintHttp(HttpBoy boy)
+    {
+        PrintMethod(boy.Method);
+        Print($" {boy.Url} {boy.Version} ");
+
+        if (boy.RequestHeader is { Count: > 0 })
+        {
+            foreach (var (key, value) in boy.RequestHeader)
+            {
+                Print($"{key}: {value}");
+            }
+        }
+
+        PrintRequestBody(boy.Toy);
+
+        Print($"{boy.Url} {boy.Version} ", true, false);
 
         var state = $"{Convert.ToInt32(boy.StatusCode)} [{boy.ReasonPhrase}]";
         PrintMessage(state, boy.IsSuccessStatusCode, afterNewLine: false);
 
         PrintFormatText($" {boy.TakeTime}ms", foreground: Color.DarkMagenta);
 
-        if (boy.Header is { Count: > 0 })
-        {
-            foreach (var (key, value) in boy.Header)
-            {
-                Print($"{key}: {value.Aggregate((x1, x2) => $"{x1}; {x2}")}");
-            }
-        }
+        if (boy.ResponseHeader is not { Count: > 0 }) return;
 
+        foreach (var (key, value) in boy.ResponseHeader)
+        {
+            Print($"{key}: {value.Aggregate((x1, x2) => $"{x1}; {x2}")}");
+        }
+        
         if (boy.Body is { Length: > 0 })
         {
             Print(boy.Body, beforeNewLine: true);
         }
-
-        PrintSeparator($"{boy.Toy.Name.Trim()} request end");
-        Console.Beep();
     }
 
-    /// <summary>
-    /// 打印 <see cref="Toy"/>
-    /// </summary>
-    /// <param name="boy"><see cref="Boy"/></param>
-    private static void PrintToy(Boy boy)
+    private static void PrintDatabase(DatabaseBoy boy)
     {
-        var toy = boy.Toy;
+        PrintMethod(boy.Method);
+        Print($" {boy.Url} {boy.DatabaseType} ", false, false);
+        PrintMessage("SUCCESS", boy.IsSuccessStatusCode, afterNewLine: false);
 
-        PrintSeparator($"{toy.Name.Trim()} request start");
+        PrintFormatText($" {boy.TakeTime}ms", foreground: Color.DarkMagenta);
 
-        PrintMethod(toy.Method);
-        Print($" {toy.Url} {toy.Version} ");
+        PrintRequestBody(boy.Toy);
+        
+        PrintJsonToTable(boy.Body);
+    }
 
-        if (toy.Header is { Count: > 0 })
+    private static void PrintJsonToTable(string json)
+    {
+        if (!JsonUtil.IsJson(json))
         {
-            foreach (var (key, value) in toy.Header)
-            {
-                Print($"{key}: {value}");
-            }
+            return;
         }
 
-        var pathVar = toy.PathVar;
-        if (pathVar is { Length: > 0 })
+        var list = JsonUtil.FromJson<List<ImmutableSortedDictionary<string, object>>>(json);
+        if (list == null && list is { Count: <= 0 })
         {
-            Print($"/{string.Join('/', pathVar)}", beforeNewLine: true);
+            return;
         }
 
-        var param = toy.Param;
-        if (param is { Count: > 0 })
+        var table = new Table();
+        table.Border(TableBorder.Heavy);
+        
+        table.AddColumns(list!.First().Keys.ToArray()).Centered();
+
+        foreach (var array in list!.Select(dictionary => dictionary.Values.Select(it => it.ToString()).ToArray()))
         {
-            Print($"?{param.ToParamsStr()}", beforeNewLine: true);
+            table.AddRow(array!);
+            table.AddEmptyRow();
         }
 
-        if (toy.Body is { Length: > 0 })
-        {
-            Print(toy.Body, beforeNewLine: true);
-        }
+        AnsiConsole.Write(table);
     }
 
     /// <summary>

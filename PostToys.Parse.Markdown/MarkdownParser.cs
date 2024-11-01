@@ -1,5 +1,4 @@
 ﻿using PostToys.Common;
-using PostToys.Parse.Enum;
 using PostToys.Parse.Markdown.Constant;
 using PostToys.Parse.Markdown.Model;
 using PostToys.Parse.Markdown.Processor;
@@ -92,8 +91,6 @@ public class MarkdownParser : AbstractParser
             select node;
 
         var url = "";
-        var method = "";
-        var version = "";
         var header = new Dictionary<string, string>();
         var param = new Dictionary<string, string>();
         var pathVar = Array.Empty<string>();
@@ -116,38 +113,34 @@ public class MarkdownParser : AbstractParser
                     body = code.Lang switch
                     {
                         "json" => string.IsNullOrWhiteSpace(code.Content) ? default : code.Content,
+                        "sql" => code.Content,
                         _ => ""
                     };
                     break;
                 case CodeBlock code when content.Contains("param"):
                     param = code.Lang switch
                     {
-                        "json" => JsonUtil.Deserialize<Dictionary<string, object>>(code.Content)?.ToDictionary(k => k.Key, k => k.Value?.ToString() ?? "") ?? [],
+                        "json" => JsonUtil.FromJson<Dictionary<string, object>>(code.Content)
+                            ?.ToDictionary(k => k.Key, k => k.Value.ToString() ?? "") ?? [],
                         _ => []
                     };
                     break;
                 case CodeBlock code when content.Contains("pathVar"):
                     pathVar = code.Lang switch
                     {
-                        "json" => (JsonUtil.Deserialize<object[]>(code.Content) ?? []).Cast<string>().ToArray(),
+                        "json" => (JsonUtil.FromJson<object[]>(code.Content) ?? []).Cast<string>().ToArray(),
                         _ => []
                     };
                     break;
                 case CodeBlock code when content.Contains("header"):
                     header = code.Lang switch
                     {
-                        "json" => JsonUtil.Deserialize<Dictionary<string, string>>(code.Content) ?? [],
+                        "json" => JsonUtil.FromJson<Dictionary<string, string>>(code.Content) ?? [],
                         _ => []
                     };
                     break;
                 case Blockquote blockquote when content.Contains("url"):
-                    if (TryParseUrlExp(blockquote.Content, out var m, out var u, out var v))
-                    {
-                        method = m;
-                        url = u;
-                        version = v;
-                    }
-
+                    url = blockquote.Content;
                     break;
             }
         }
@@ -158,47 +151,10 @@ public class MarkdownParser : AbstractParser
                 ? ""
                 : nodeDictionary[(int)request.ParentId].Content.Trim() + "@") + request.Content.Trim(),
             Url = url,
-            Method = method,
-            Version = version,
             Header = header,
             Param = param,
             PathVar = pathVar,
             Body = body!
         };
-    }
-
-    /// <summary>
-    /// 尝试解析链接表达式，格式为：<code>POST http://{ip}:{{port}}{{context-path}}{{baseUrl}}/create HTTP/1.1</code>
-    /// </summary>
-    /// <param name="input">输入内容</param>
-    /// <param name="method">http请求方法，即是第一部分，必须包含</param>
-    /// <param name="url">http链接，即是第二部分，必须包含</param>
-    /// <param name="version">http版本，即是第三部分，可选，默认为HTTP/1.1</param>
-    /// <returns>是否解析成功</returns>
-    private static bool TryParseUrlExp(string input, out string method, out string url, out string version)
-    {
-        var item = input.Split(" ").Where(it => it.Length > 1).ToArray();
-
-        method = "";
-        url = "";
-        version = "";
-        if (item.Length < 2) return false;
-
-        method = item.First();
-        version = "HTTP/1.1";
-        if (item.Length < 3)
-        {
-            url = item[1];
-            return true;
-        }
-
-        var lastItem = item.Last();
-        if (lastItem.StartsWith("HTTP/", StringComparison.CurrentCultureIgnoreCase)) version = lastItem.ToUpper();
-
-        for (var i = 1; i < item.Length - 1; i++) url += item[i] + " ";
-
-        url = url.Trim();
-
-        return true;
     }
 }

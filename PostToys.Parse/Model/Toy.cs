@@ -1,6 +1,4 @@
-﻿using PostToys.Parse.Enum;
-
-namespace PostToys.Parse.Model;
+﻿namespace PostToys.Parse.Model;
 
 /// <summary>
 /// 请求信息；
@@ -8,11 +6,6 @@ namespace PostToys.Parse.Model;
 /// </summary>
 public readonly record struct Toy
 {
-    /// <summary>
-    /// 类型
-    /// </summary>
-    public ToyType Type { get => Url.GetToyTypeByUrl(); }
-
     /// <summary>
     /// 名称
     /// </summary>
@@ -22,16 +15,6 @@ public readonly record struct Toy
     /// 链接
     /// </summary>
     public string Url { get; init; }
-
-    /// <summary>
-    /// 请求方法
-    /// </summary>
-    public string Method { get; init; }
-
-    /// <summary>
-    /// HTTP 版本
-    /// </summary>
-    public string Version { get; init; }
 
     /// <summary>
     /// 请求头

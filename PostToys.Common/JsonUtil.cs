@@ -10,10 +10,10 @@ public static class JsonUtil
     /// <summary>
     /// json转对象
     /// </summary>
-    /// <param name="json">json 字符串</param>
+    /// <param name="path">json 文件路径</param>
     /// <typeparam name="T">目标对象范型</typeparam>
     /// <returns>转换后的对象</returns>
-    public static T? DeserializeJsonFile<T>(string path)
+    public static T? FromJsonFile<T>(string path)
     {
         var json = path.PathToText();
         if (string.IsNullOrWhiteSpace(json))
@@ -30,7 +30,7 @@ public static class JsonUtil
     /// <param name="json">json 字符串</param>
     /// <typeparam name="T">目标对象范型</typeparam>
     /// <returns>转换后的对象</returns>
-    public static T? Deserialize<T>(string json)
+    public static T? FromJson<T>(string json)
     {
         if (string.IsNullOrWhiteSpace(json))
         {
@@ -38,6 +38,16 @@ public static class JsonUtil
         }
 
         return JsonSerializer.Deserialize<T>(json) ?? default;
+    }
+
+    /// <summary>
+    /// 序列化
+    /// </summary>
+    /// <param name="obj">序列化对象</param> 
+    /// <returns>json</returns>
+    public static string ToJson(object obj)
+    {
+        return JsonSerializer.Serialize(obj);
     }
 
     /// <summary>
